@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, effect, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
-import { Platform, IonApp, IonSplitPane, IonMenu, IonContent, IonList, IonListHeader, IonNote, IonMenuToggle, IonItem, IonIcon, IonLabel, IonRouterOutlet, IonAvatar, IonImg, IonRouterLink } from '@ionic/angular/standalone';
+import { Platform, NavController, IonApp, IonSplitPane, IonMenu, IonContent, IonList, IonListHeader, IonNote, IonMenuToggle, IonItem, IonIcon, IonLabel, IonRouterOutlet, IonAvatar, IonImg, IonRouterLink } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { home, logIn, documentText, checkmarkCircle, images, camera, arrowUndoCircle } from 'ionicons/icons';
+import { home, logIn,exit, documentText, checkmarkCircle, images, camera, arrowUndoCircle } from 'ionicons/icons';
 import { AuthService } from './auth/services/auth.service';
 import { User } from '../app/auth/interfaces/users';
 import { SplashScreen } from '@capacitor/splash-screen';
@@ -21,11 +21,15 @@ export class AppComponent {
 
   #authService = inject(AuthService);
   #platform = inject(Platform);
+  #nav = inject(NavController);
 
-  public appPages = [{ title: 'Home', url: '/products', icon: 'home' }];
-labels: any;
+  public appPages = [
+    { title: 'Home', url: '/products', icon: 'home' },
+    { title: 'Add product', url: '/products/add', icon: 'add' },
+  ];
+  labels: any;
   constructor() {
-    addIcons({ home, logIn, documentText, checkmarkCircle, images, camera, arrowUndoCircle });
+    addIcons({ home, exit, logIn, documentText, checkmarkCircle, images, camera, arrowUndoCircle });
 
     // effect(() => {
     //   if (this.#authService.logged()) {
@@ -53,6 +57,7 @@ labels: any;
   }
 
   async initializeApp() {
+
     if (this.#platform.is('capacitor')) {
       await this.#platform.ready();
       SplashScreen.hide();
@@ -70,6 +75,11 @@ labels: any;
         this.user = null;
       }
     }
+  }
+
+  async logout() {
+    await this.#authService.logout();
+    this.#nav.navigateRoot(['/auth/login']);
   }
   
 }
