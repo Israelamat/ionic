@@ -1,0 +1,7 @@
+{
+  "name": "ionic-assbook",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}
